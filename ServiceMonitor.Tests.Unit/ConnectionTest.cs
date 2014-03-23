@@ -66,11 +66,21 @@ namespace ServiceMonitor.Tests.Unit
         }
 
         [Test]
+        public void IsServiceOutage_Should_only_check_if_outage_is_set()
+        {
+            var node = new Node();
+            var isOutage = _connection.ServiceOutage(node);
+            Assert.IsFalse(isOutage);
+        }
+
+        [Test]
         public void IsServiceOutage_Can_detect_service_outage()
         {
             var node = new Node
                 {
-                    OutageStartTime = DateTimeOffset.UtcNow,
+                    Ip = "127.0.0.1",
+                    Port = 11111,
+                    OutageStartTime = DateTimeOffset.UtcNow.AddHours(-1),
                     OutageEndTime = DateTimeOffset.UtcNow.AddHours(1)
                 };
             var isOutage = _connection.ServiceOutage(node);
@@ -107,6 +117,42 @@ namespace ServiceMonitor.Tests.Unit
         }
 
         [Test]
+        public void CallSubscribedServies_should_wait_for_gracetime_before_sending_notification()
+        {
+            // todo: do gractimechecks
+            _connection.CallSubscribedServies(GetSubscribers());
+
+        }
+
+        [Test]
+        public void CallSubscribedServies_Does_Not_send_notification_if_ServicePollPassed_passed()
+        {
+            // todo: need to stop the polling 
+        }
+
+        //[Test]
+        //public void CallSubscribedServies_makes_a_call_to_ServicePollPassed()
+        //{
+        //    var thisSubsriber = new List<Subscriber>()
+        //        {
+        //            new Subscriber
+        //                {
+        //                    PollingFrequency = 100000,
+        //                    Service = new Node
+        //                        {
+        //                            Ip = "127.0.0.1",
+        //                            Port = 11111,
+        //                            OutageStartTime = DateTime.Now,
+        //                            OutageEndTime = DateTime.Now.AddHours(-1)
+        //                        }
+        //                }
+        //        };
+        //    var connection = MockRepository.GenerateMock<IConnection>();
+        //    connection.Expect(a => a.CallSubscribedServies(thisSubsriber));
+        //    connection.AssertWasCalled(a => a.ServicePollPassed(thisSubsriber.First()));
+        //}
+
+        [Test]
         public void TryGetServiceStatus_should_return_correct_service_status()
         {
             var passed = _connection.ServicePollPassed(GetSubscribers().First());
@@ -129,8 +175,13 @@ namespace ServiceMonitor.Tests.Unit
                 {
                     new Subscriber
                         {
+                            GraceTime = 1000,
                             PollingFrequency = 10000000,
-                            Service = GetCriteria()
+                            Service = new Node
+                                {
+                                    Ip = "127.0.0.1",
+                                    Port = 11111
+                                }
                         },
 
                     new Subscriber

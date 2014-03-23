@@ -78,8 +78,6 @@ namespace ServiceMonitor.Monitor.Services
                     }
                     catch
                     {                    
-                        // check for the gracetime
-                        // after time we should perhaps do one last check
                         return false;
                     }               
                 }
@@ -88,13 +86,38 @@ namespace ServiceMonitor.Monitor.Services
 
         public void CallSubscribedServies(IEnumerable<Subscriber> subscribers)
         {
+            bool passed;
             foreach (var subscriber in subscribers)
             {
-                var passed = ServicePollPassed(subscriber);
+                passed = ServicePollPassed(subscriber);
                 if (!passed)
                 {
                     if (!ServiceOutage(subscriber.Service))
-                        _notification.Send(subscriber);
+                    {
+                        // check for the  grace time ??
+                        // if exist wait before notification send
+                        // check to see if service online before end of gracetime
+                        // if grace time < polling frequency    extracheck is required
+
+                        if (subscriber.GraceTime > 0)
+                        {
+                            Thread.Sleep(subscriber.GraceTime);
+                            passed = ServicePollPassed(subscriber);
+                            if (subscriber.GraceTime < subscriber.PollingFrequency)
+                            {
+                                passed = ServicePollPassed(subscriber);
+                            }
+                            if (!passed)
+                            {
+                                _notification.Send(subscriber);
+                            }
+                        }
+                        else
+                        {
+                            _notification.Send(subscriber);
+                        }
+                    }
+
                 }
             }
         }
@@ -105,7 +128,7 @@ namespace ServiceMonitor.Monitor.Services
                 throw new ArgumentNullException("service");
 
             var now = DateTimeOffset.UtcNow;
-
+            
             if ((now > service.OutageStartTime) && (now < service.OutageEndTime))
             {
                 return true;
