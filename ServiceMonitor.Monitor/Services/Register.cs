@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ServiceMonitor.Caller;
 
 namespace ServiceMonitor.Monitor.Services
@@ -16,13 +17,30 @@ namespace ServiceMonitor.Monitor.Services
             _connection = connection;
         }
 
-        public IEnumerable<Node> GetAllSubsribers()
+        public IEnumerable<Subscriber> GetAllSubsribers()
         {
             // call some service to get all subscribers
-            throw new NotImplementedException();
+            return new List<Subscriber>();
         }
 
-        public void Enable(Node caller)
+        public IEnumerable<Subscriber> SameServiceSubscribers()
+        {
+            var allRegistered = GetAllSubsribers();
+            var sameServiceSubscribers = new List<Subscriber>();
+
+            foreach (var subscriber in allRegistered)
+            {
+                sameServiceSubscribers.AddRange(
+                    allRegistered.Where(
+                        sub =>
+                        subscriber.Criteria.Ip == sub.Criteria.Ip &&
+                        subscriber.Criteria.Port == sub.Criteria.Port));
+            }
+
+            return sameServiceSubscribers;
+        }
+
+        public void Enable(Subscriber caller)
         {
             _connection.TryPollServie(caller);
         }

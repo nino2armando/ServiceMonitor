@@ -5,6 +5,7 @@ namespace ServiceMonitor.Notification.Services
 {
     public interface INotification
     {
-        void Send(IEnumerable<Node> callers);
+        void Send(Subscriber caller);
+        void Send(IEnumerable<Subscriber> callers);
     }
 }

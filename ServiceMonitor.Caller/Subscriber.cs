@@ -1,11 +1,11 @@
-﻿using ServiceMonitor.SharedContract.Contracts;
+﻿using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Caller
 {
-    public class Node
+    public class Subscriber
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public ServiceCriteria Criteria { get; set; }
+        public Node Criteria { get; set; }
     }
 }

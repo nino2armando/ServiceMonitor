@@ -50,10 +50,6 @@
       <Project>{2FB82A58-2A39-402A-96C1-824D03BF0AAF}</Project>
       <Name>ServiceMonitor.Caller</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ServiceMonitor.SharedContract\ServiceMonitor.SharedContract.csproj">
-      <Project>{A54238C5-7575-46C9-A57E-5609852B2AB8}</Project>
-      <Name>ServiceMonitor.SharedContract</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using NUnit.Framework;
 using Rhino.Mocks;
 using ServiceMonitor.Caller;
-using ServiceMonitor.Monitor.Models;
 using ServiceMonitor.Monitor.Services;
 using ServiceMonitor.Notification.Services;
-using ServiceMonitor.SharedContract.Contracts;
+using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Tests.Integration
 {
@@ -18,14 +16,16 @@ namespace ServiceMonitor.Tests.Integration
         private TcpListener _listener;
         private TcpClient _client;
         private INotification _notification;
+        private IRegister _register;
 
         [SetUp]
         public void SetUp()
         {
             _notification = MockRepository.GenerateMock<INotification>();
+            _register = MockRepository.GenerateMock<IRegister>();
             _listener = new TcpListener(IPAddress.Loopback, 11111);
             _client = new TcpClient();
-            _connection = new Connection(_client, _notification);
+            _connection = new Connection(_client, _notification, _register);
         }
 
         [Test]
@@ -38,12 +38,12 @@ namespace ServiceMonitor.Tests.Integration
         }
 
 
-        public Node GetCaller()
+        public Subscriber GetCaller()
         {
-            return new Node
+            return new Subscriber
                 {
                     Name = "test caller",
-                    Criteria = new ServiceCriteria
+                    Criteria = new Node
                         {
                             Ip = "127.0.0.1",
                             Port = 11111,

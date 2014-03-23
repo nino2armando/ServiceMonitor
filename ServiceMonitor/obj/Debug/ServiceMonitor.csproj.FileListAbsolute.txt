@@ -1,6 +1,5 @@
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\bin\Debug\ServiceMonitor.exe.config
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\bin\Debug\ServiceMonitor.exe
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\bin\Debug\ServiceMonitor.pdb
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\obj\Debug\ServiceMonitor.csprojResolveAssemblyReference.cache
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\obj\Debug\ServiceMonitor.exe
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor\obj\Debug\ServiceMonitor.pdb

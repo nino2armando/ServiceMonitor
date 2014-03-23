@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using ServiceMonitor.Caller;
 using ServiceMonitor.Notification.Services;
-using ServiceMonitor.SharedContract.Contracts;
+using ServiceMonitor.Service;
+
 
 namespace ServiceMonitor.Monitor.Services
 {
@@ -31,17 +34,17 @@ namespace ServiceMonitor.Monitor.Services
             _register = register;
         }
 
-        public bool TryGetServiceStatus(ServiceCriteria criteria)
+        public bool TryGetServiceStatus(Node node)
         {
-            if (criteria == null)
-                throw new ArgumentNullException("criteria");
+            if (node == null)
+                throw new ArgumentNullException("node");
 
-            var address = IPAddress.Parse(criteria.Ip);
+            var address = IPAddress.Parse(node.Ip);
             bool isup = true;
 
             try
             {
-                _client.Connect(address, criteria.Port);
+                _client.Connect(address, node.Port);
             }
             catch (Exception)
             {
@@ -51,7 +54,7 @@ namespace ServiceMonitor.Monitor.Services
             return isup;
         }
 
-        public void TryPollServie(Node caller)
+        public void TryPollServie(Subscriber caller)
         {
             if (caller.Criteria == null)
                 throw new ArgumentNullException("criteria");
@@ -75,7 +78,9 @@ namespace ServiceMonitor.Monitor.Services
                     catch
                     {
                         // we should get all the subscribers and send notification to the ones that are subscribing to the same service
-                        _notification.Send(_register.GetAllSubsribers());
+
+                        var simillarSubscribers = _register.SameServiceSubscribers();
+                        _notification.Send(simillarSubscribers);
                     }
                     
                 }

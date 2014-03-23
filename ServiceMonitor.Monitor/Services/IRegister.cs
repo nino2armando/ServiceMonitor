@@ -5,7 +5,8 @@ namespace ServiceMonitor.Monitor.Services
 {
     public interface IRegister
     {
-        IEnumerable<Node> GetAllSubsribers();
-        void Enable(Node caller);
+        IEnumerable<Subscriber> GetAllSubsribers();
+        IEnumerable<Subscriber> SameServiceSubscribers();
+        void Enable(Subscriber caller);
     }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
-using ServiceMonitor.Monitor.Models;
+using Rhino.Mocks;
 using ServiceMonitor.Monitor.Services;
-using ServiceMonitor.SharedContract.Contracts;
+using ServiceMonitor.Notification.Services;
+using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Tests.Unit
 {
@@ -18,12 +15,16 @@ namespace ServiceMonitor.Tests.Unit
         private IConnection _connection;
         private TcpListener _listener;
         private TcpClient _client;
+        private IRegister _register;
+        private INotification _notification;
 
         [SetUp]
         public void SetUp()
-        {    
+        {
+            _notification = MockRepository.GenerateMock<INotification>();
+            _register = MockRepository.GenerateMock<IRegister>();
             _client = new TcpClient();
-            _connection = new Connection(_client);
+            _connection = new Connection(_client, _notification, _register);
         }
 
         // add tear down for stop connection
@@ -60,9 +61,9 @@ namespace ServiceMonitor.Tests.Unit
             Assert.IsTrue(secondTry);
         }
 
-        public ServiceCriteria GetCriteria()
+        public Node GetCriteria()
         {
-            return new ServiceCriteria
+            return new Node
             {
                 Ip = "127.0.0.1",
                 Port = 11111,

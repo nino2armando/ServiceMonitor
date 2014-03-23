@@ -6,7 +6,12 @@ namespace ServiceMonitor.Notification.Services
 {
     public class Notification : INotification
     {
-        public void Send(IEnumerable<Node> callers)
+        public void Send(Subscriber caller)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Send(IEnumerable<Subscriber> callers)
         {
             throw new System.NotImplementedException();
         }

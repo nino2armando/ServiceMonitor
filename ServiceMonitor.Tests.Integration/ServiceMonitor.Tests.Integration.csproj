@@ -65,9 +65,9 @@
       <Project>{ACA3F4BD-D477-4AE5-BB82-258B114BF460}</Project>
       <Name>ServiceMonitor.Notification</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ServiceMonitor.SharedContract\ServiceMonitor.SharedContract.csproj">
-      <Project>{A54238C5-7575-46C9-A57E-5609852B2AB8}</Project>
-      <Name>ServiceMonitor.SharedContract</Name>
+    <ProjectReference Include="..\ServiceMonitor.Service\ServiceMonitor.Service.csproj">
+      <Project>{9279EA2E-A38A-447B-9C48-A737FC3FAB1B}</Project>
+      <Name>ServiceMonitor.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
