@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using ServiceMonitor.Caller;
 using ServiceMonitor.Notification.Services;
 using ServiceMonitor.Service;
@@ -15,7 +17,7 @@ namespace ServiceMonitor.Monitor.Services
         private readonly IRegister _register;
 
         private bool _disposed;
-        private const int MIN_FREQUENCY = 1000000;
+        private const int MIN_FREQUENCY = 1000;
 
         public Connection(TcpClient client, INotification notification, IRegister register)
         {
@@ -44,7 +46,7 @@ namespace ServiceMonitor.Monitor.Services
              _client.Connect(address, node.Port);
         }
 
-        public void TryPollServie(Subscriber subscriber)
+        public bool ServicePollPassed(Subscriber subscriber)
         {
             if (subscriber.Service == null)
                 throw new ArgumentNullException("criteria");
@@ -63,24 +65,36 @@ namespace ServiceMonitor.Monitor.Services
                 }
                 catch (Exception)
                 {
-                    if(ServiceOutage(subscriber.Service))
-                        _notification.Send(subscriber);
+                    return false;
                 }
+
                 var reader = new StreamReader(_client.GetStream());
 
                 while (TestConnection(subscriber.PollingFrequency))
                 {
                     try
                     {
-                        var timer = new System.Threading.Timer(o => reader.ReadLine() , null, 0, subscriber.PollingFrequency);
+                        var timer = new Timer(o => reader.ReadLine() , null, 0, subscriber.PollingFrequency);
                     }
                     catch
-                    {
+                    {                    
                         // check for the gracetime
                         // after time we should perhaps do one last check
-                        if (!ServiceOutage(subscriber.Service))
-                            _notification.Send(subscriber);
+                        return false;
                     }               
+                }
+            }
+        }
+
+        public void CallSubscribedServies(IEnumerable<Subscriber> subscribers)
+        {
+            foreach (var subscriber in subscribers)
+            {
+                var passed = ServicePollPassed(subscriber);
+                if (!passed)
+                {
+                    if (!ServiceOutage(subscriber.Service))
+                        _notification.Send(subscriber);
                 }
             }
         }

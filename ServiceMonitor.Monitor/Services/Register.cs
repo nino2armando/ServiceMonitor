@@ -48,7 +48,7 @@ namespace ServiceMonitor.Monitor.Services
                 throw new ArgumentNullException("caller");
 
             AllSubscribers.Add(caller);
-            _connection.TryPollServie(caller);
+            _connection.CallSubscribedServies(AllSubscribers);
         }
     }
 }

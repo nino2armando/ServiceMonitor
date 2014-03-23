@@ -30,8 +30,9 @@ namespace ServiceMonitor.Tests.Unit
             var subscriber = GetTestSubscribers().First();
 
             _register.Enable(subscriber);
+            var allsubs = _register.GetAllSubsribers();
 
-            _connection.AssertWasCalled(a => a.TryPollServie(subscriber));
+            _connection.AssertWasCalled(a => a.CallSubscribedServies(allsubs));
         }
 
         [Test]

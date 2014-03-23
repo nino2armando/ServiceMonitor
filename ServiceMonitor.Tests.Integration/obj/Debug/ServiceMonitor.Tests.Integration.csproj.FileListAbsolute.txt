@@ -1,4 +1,3 @@
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\obj\Debug\ServiceMonitor.Tests.Integration.csprojResolveAssemblyReference.cache
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Tests.Integration.dll
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Tests.Integration.pdb
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\nunit.framework.dll
@@ -13,5 +12,6 @@ c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonito
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Service.pdb
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\nunit.framework.xml
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\Rhino.Mocks.xml
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\obj\Debug\ServiceMonitor.Tests.Integration.csprojResolveAssemblyReference.cache
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\obj\Debug\ServiceMonitor.Tests.Integration.dll
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\obj\Debug\ServiceMonitor.Tests.Integration.pdb

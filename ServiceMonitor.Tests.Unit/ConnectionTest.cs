@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using NUnit.Framework;
@@ -41,15 +43,6 @@ namespace ServiceMonitor.Tests.Unit
             }
         }
 
-        [Test, Ignore("Do not run")]
-        public void TryPollServie_uses_TestConnection_to_validate_connection()
-        {
-            EstablishListener();
-            _connection.TryPollServie(GetSubscriber());
-            
-            _connection.AssertWasCalled(a => a.TestConnection(11));       
-        }
-
         [Test]
         public void TestConnection_Should_Return_Connection_Status()
         {
@@ -65,18 +58,22 @@ namespace ServiceMonitor.Tests.Unit
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TryPollServie_Should_Not_Accept_Frequency_Lower_than_a_second()
         {
-            EstablishListener();
-            _connection.TryPollServie(new Subscriber
+            _connection.ServicePollPassed(new Subscriber
                 {
                     Service = GetCriteria(),
                     PollingFrequency = 1
-                });          
+                });
         }
 
         [Test]
         public void IsServiceOutage_Can_detect_service_outage()
         {
-            var isOutage = _connection.ServiceOutage(GetCriteria());
+            var node = new Node
+                {
+                    OutageStartTime = DateTimeOffset.UtcNow,
+                    OutageEndTime = DateTimeOffset.UtcNow.AddHours(1)
+                };
+            var isOutage = _connection.ServiceOutage(node);
             Assert.IsTrue(isOutage);
         }
 
@@ -87,17 +84,35 @@ namespace ServiceMonitor.Tests.Unit
             var isOutage = _connection.ServiceOutage(null);
         }
 
-        //[Test]
-        //public void TryGetServiceStatus_should_return_correct_service_status()
-        //{
-        //    var criteria = GetCriteria();
-        //    bool firstTry = _connection.TryGetServiceStatus(criteria);
-        //    EstablishListener();
-        //    bool secondTry = _connection.TryGetServiceStatus(criteria);
+        [Test]
+        public void CallSubscribedServies_sends_notification_on_Failure()
+        {
+            var thisSubsriber = new List<Subscriber>()
+                {
+                    new Subscriber
+                        {
+                            PollingFrequency = 100000,
+                            Service = new Node
+                                {
+                                    Ip = "127.0.0.1",
+                                    Port = 11111,
+                                    OutageStartTime = DateTime.Now,
+                                    OutageEndTime = DateTime.Now.AddHours(-1)
+                                }
+                        }
+                };
+            _connection.CallSubscribedServies(thisSubsriber);
 
-        //    Assert.IsFalse(firstTry);
-        //    Assert.IsTrue(secondTry);
-        //}
+            _notification.AssertWasCalled(a => a.Send(thisSubsriber.First()));
+        }
+
+        [Test]
+        public void TryGetServiceStatus_should_return_correct_service_status()
+        {
+            var passed = _connection.ServicePollPassed(GetSubscribers().First());
+
+            Assert.IsFalse(passed);
+        }
 
         [Test]
         public void IsIPV4_can_validate_v4_address()
@@ -108,12 +123,21 @@ namespace ServiceMonitor.Tests.Unit
             Assert.IsFalse(isValid);
         }
 
-        public Subscriber GetSubscriber()
+        public IEnumerable<Subscriber> GetSubscribers()
         {
-            return new Subscriber
+            return new List<Subscriber>
                 {
-                    PollingFrequency = 10000000,
-                    Service = GetCriteria()
+                    new Subscriber
+                        {
+                            PollingFrequency = 10000000,
+                            Service = GetCriteria()
+                        },
+
+                    new Subscriber
+                        {
+                            PollingFrequency = 20000000,
+                            Service = GetCriteria()
+                        },
                 };
         }
 
@@ -123,8 +147,8 @@ namespace ServiceMonitor.Tests.Unit
             {
                 Ip = "127.0.0.1",
                 Port = 11111,
-                OutageStartTime = DateTimeOffset.Now,
-                OutageEndTime = DateTimeOffset.Now.AddHours(1)
+                OutageStartTime = DateTimeOffset.UtcNow,
+                OutageEndTime = DateTimeOffset.UtcNow.AddHours(1)
             };
         }
 

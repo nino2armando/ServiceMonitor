@@ -2,4 +2,3 @@ c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonito
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\bin\Debug\ServiceMonitor.Service.pdb
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.dll
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.pdb
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.csprojResolveAssemblyReference.cache
