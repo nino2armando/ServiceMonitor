@@ -1,4 +1,4 @@
-﻿namespace ServiceMonitor.Monitor.Models
+﻿namespace ServiceMonitor.SharedContract.Contracts
 {
     public class ServiceCriteria
     {

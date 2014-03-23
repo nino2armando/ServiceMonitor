@@ -2,89 +2,117 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using ServiceMonitor.Monitor.Models;
+using ServiceMonitor.Caller;
+using ServiceMonitor.Notification.Services;
+using ServiceMonitor.SharedContract.Contracts;
 
 namespace ServiceMonitor.Monitor.Services
 {
     public class Connection : IConnection
     {
         private TcpClient _client { get; set; }
-        private bool _disposed;
+        private INotification _notification;
+        private IRegister _register;
 
-        public Connection(TcpClient client)
+        private bool _disposed;
+        private const int MIN_FREQUENCY = 1000000;
+
+        public Connection(TcpClient client, INotification notification, IRegister register)
         {
-            if(client == null)
-                throw new ArgumentNullException("client");
+            if (notification == null)
+                throw new ArgumentNullException("notification");
+
+            if(register == null)
+                throw new ArgumentNullException("register");
 
             _disposed = false;
-            _client = client;
+            _client = client ?? new TcpClient();
+            _notification = notification;
+            _register = register;
         }
 
-        public Response Estabilish(ServiceCriteria criteria)
+        public bool TryGetServiceStatus(ServiceCriteria criteria)
         {
             if (criteria == null)
                 throw new ArgumentNullException("criteria");
 
             var address = IPAddress.Parse(criteria.Ip);
+            bool isup = true;
 
-/*            while (true)
+            try
+            {
+                _client.Connect(address, criteria.Port);
+            }
+            catch (Exception)
+            {
+                isup = false;
+            }
+
+            return isup;
+        }
+
+        public void TryPollServie(Node caller)
+        {
+            if (caller.Criteria == null)
+                throw new ArgumentNullException("criteria");
+
+            var address = IPAddress.Parse(caller.Criteria.Ip);
+
+            while (true)
             {
                 string line = string.Empty;
 
-                _client.Connect(address, criteria.Port);
+                _client.Connect(address, caller.Criteria.Port);
                 var reader = new StreamReader(_client.GetStream());
 
-                while (TestConnection())
+                while (TestConnection(caller.Criteria.PollingFrequency))
                 {
-                    line = reader.ReadLine();
-                }
-
-            }*/
-
-            string line = string.Empty;
-            _client.Connect(address, criteria.Port);
-
-            var reader = new StreamReader(_client.GetStream());
-            bool test;
-            if (TestConnection())
-            {
-                test = true;
-            }
-            else
-            {
-                test = false;
-            }
-
-            return new Response();
-        }
-
-        public bool TestConnection()
-        {
-            bool isConnected = true;
-
-            if (_client.Client.Poll(0, SelectMode.SelectRead))
-            {
-                if (!_client.Connected) { isConnected = false; }
-                else
-                {
-                    byte[] b = new byte[1];
-
                     try
                     {
-                        if (_client.Client.Receive(b, SocketFlags.Peek) == 0)
-                        {
-                            // client disconected
-                            isConnected = false;
-                        }
+                        line = reader.ReadLine();
+                        // we should send a service online here perhaps
                     }
-                    catch (Exception)
+                    catch
                     {
-                        isConnected = false;
-                        // throw;
+                        // we should get all the subscribers and send notification to the ones that are subscribing to the same service
+                        _notification.Send(_register.GetAllSubsribers());
                     }
+                    
                 }
             }
-            return isConnected;
+            throw new NotImplementedException();
+        }
+
+        public bool TestConnection(int frequency)
+        {
+            if (frequency < MIN_FREQUENCY)
+            {
+                throw new ArgumentOutOfRangeException("frequency most be higher than a second");
+            }
+
+            try
+            {
+                if (_client != null && _client.Client != null && _client.Client.Connected)
+                {
+                    // if client is disconnected
+                    if (_client.Client.Poll(frequency, SelectMode.SelectRead))
+                    {
+                        byte[] buff = new byte[1];
+                        if (_client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                        {
+                            // client is disconnected
+                            return false;
+                        }
+                        return true;
+                    }
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         protected virtual void Dispose(bool disposing)

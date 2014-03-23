@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F7298D
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceMonitor.SharedContract", "ServiceMonitor.SharedContract\ServiceMonitor.SharedContract.csproj", "{A54238C5-7575-46C9-A57E-5609852B2AB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{78329072-8DCF-46A0-B4D1-CDBAB47A4C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78329072-8DCF-46A0-B4D1-CDBAB47A4C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78329072-8DCF-46A0-B4D1-CDBAB47A4C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A54238C5-7575-46C9-A57E-5609852B2AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54238C5-7575-46C9-A57E-5609852B2AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54238C5-7575-46C9-A57E-5609852B2AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54238C5-7575-46C9-A57E-5609852B2AB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

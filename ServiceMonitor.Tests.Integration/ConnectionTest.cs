@@ -1,8 +1,13 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using NUnit.Framework;
+using Rhino.Mocks;
+using ServiceMonitor.Caller;
 using ServiceMonitor.Monitor.Models;
 using ServiceMonitor.Monitor.Services;
+using ServiceMonitor.Notification.Services;
+using ServiceMonitor.SharedContract.Contracts;
 
 namespace ServiceMonitor.Tests.Integration
 {
@@ -12,48 +17,39 @@ namespace ServiceMonitor.Tests.Integration
         private IConnection _connection;
         private TcpListener _listener;
         private TcpClient _client;
+        private INotification _notification;
 
         [SetUp]
         public void SetUp()
         {
+            _notification = MockRepository.GenerateMock<INotification>();
             _listener = new TcpListener(IPAddress.Loopback, 11111);
             _client = new TcpClient();
-            _connection = new Connection(_client);
-        }
-
-        [Test]
-        public void TestConnection_Should_Return_Connection_Status()
-        {
-            var client = new TcpClient();
-            _connection = new Connection(client);
-
-            var isConnected = _connection.TestConnection();
-
-            Assert.IsTrue(isConnected);
+            _connection = new Connection(_client, _notification);
         }
 
         [Test]
         public void Estabilish_Returns_Correct_Response()
         {
             //EstablishListener();
-            var criteria = new ServiceCriteria
-                {
-                    Ip = "127.0.0.1",
-                    Port = 11111,
-                    PollingFrequency = 1
-                };
-
-            var response = _connection.Estabilish(criteria);
+            var caller = GetCaller();
+            _connection.TryPollServie(caller);
             
-
         }
 
-        [Test]
-        public void Kill_TcpClient()
+
+        public Node GetCaller()
         {
-            _client.Client.Disconnect(true);
-            _client.Close();
-            
+            return new Node
+                {
+                    Name = "test caller",
+                    Criteria = new ServiceCriteria
+                        {
+                            Ip = "127.0.0.1",
+                            Port = 11111,
+                            PollingFrequency = 1
+                        }
+                };
         }
 
         public void EstablishListener()
@@ -61,9 +57,5 @@ namespace ServiceMonitor.Tests.Integration
             _listener.Start();
         }
 
-        public void StopListener(TcpListener listener)
-        {
-            listener.Stop();
-        }
     }
 }

@@ -3,3 +3,5 @@ c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonito
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.csprojResolveAssemblyReference.cache
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.dll
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.pdb
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.SharedContract.dll
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.SharedContract.pdb

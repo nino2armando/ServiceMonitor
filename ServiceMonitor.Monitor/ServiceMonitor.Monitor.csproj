@@ -40,12 +40,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ClientSetting.cs" />
-    <Compile Include="Models\Response.cs" />
-    <Compile Include="Models\ServiceCriteria.cs" />
-    <Compile Include="Models\Status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Connection.cs" />
     <Compile Include="Services\IConnection.cs" />
+    <Compile Include="Services\IRegister.cs" />
+    <Compile Include="Services\Register.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceMonitor.Caller\ServiceMonitor.Caller.csproj">
+      <Project>{2FB82A58-2A39-402A-96C1-824D03BF0AAF}</Project>
+      <Name>ServiceMonitor.Caller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceMonitor.Notification\ServiceMonitor.Notification.csproj">
+      <Project>{ACA3F4BD-D477-4AE5-BB82-258B114BF460}</Project>
+      <Name>ServiceMonitor.Notification</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceMonitor.SharedContract\ServiceMonitor.SharedContract.csproj">
+      <Project>{A54238C5-7575-46C9-A57E-5609852B2AB8}</Project>
+      <Name>ServiceMonitor.SharedContract</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

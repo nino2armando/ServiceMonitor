@@ -9,3 +9,9 @@ c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonito
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Monitor.pdb
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\nunit.framework.xml
 c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\Rhino.Mocks.xml
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Caller.dll
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Caller.pdb
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.SharedContract.dll
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.SharedContract.pdb
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Notification.dll
+c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.Tests.Integration\bin\Debug\ServiceMonitor.Notification.pdb
