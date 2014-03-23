@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using ServiceMonitor.Caller;
 using ServiceMonitor.Notification.Services;
 using ServiceMonitor.Service;
 
-
 namespace ServiceMonitor.Monitor.Services
 {
     public class Connection : IConnection
     {
         private TcpClient _client { get; set; }
-        private INotification _notification;
-        private IRegister _register;
+        private readonly INotification _notification;
+        private readonly IRegister _register;
 
         private bool _disposed;
         private const int MIN_FREQUENCY = 1000000;
@@ -34,67 +31,76 @@ namespace ServiceMonitor.Monitor.Services
             _register = register;
         }
 
-        public bool TryGetServiceStatus(Node node)
+        public void TryConnect(Node node)
         {
             if (node == null)
                 throw new ArgumentNullException("node");
 
+            if(!IsIPV4(node.Ip))
+                throw new InvalidDataException("Ip");
+
             var address = IPAddress.Parse(node.Ip);
-            bool isup = true;
 
-            try
-            {
-                _client.Connect(address, node.Port);
-            }
-            catch (Exception)
-            {
-                isup = false;
-            }
-
-            return isup;
+             _client.Connect(address, node.Port);
         }
 
-        public void TryPollServie(Subscriber caller)
+        public void TryPollServie(Subscriber subscriber)
         {
-            if (caller.Criteria == null)
+            if (subscriber.Service == null)
                 throw new ArgumentNullException("criteria");
 
-            var address = IPAddress.Parse(caller.Criteria.Ip);
+            if(!IsIPV4(subscriber.Service.Ip))
+                throw new InvalidDataException("Ip");
+            
+            if (subscriber.PollingFrequency < MIN_FREQUENCY)    
+                throw new ArgumentOutOfRangeException("frequency most be higher than a second");
 
             while (true)
             {
-                string line = string.Empty;
-
-                _client.Connect(address, caller.Criteria.Port);
+                try
+                {
+                    TryConnect(subscriber.Service);
+                }
+                catch (Exception)
+                {
+                    if(ServiceOutage(subscriber.Service))
+                        _notification.Send(subscriber);
+                }
                 var reader = new StreamReader(_client.GetStream());
 
-                while (TestConnection(caller.Criteria.PollingFrequency))
+                while (TestConnection(subscriber.PollingFrequency))
                 {
                     try
                     {
-                        line = reader.ReadLine();
-                        // we should send a service online here perhaps
+                        var timer = new System.Threading.Timer(o => reader.ReadLine() , null, 0, subscriber.PollingFrequency);
                     }
                     catch
                     {
-                        // we should get all the subscribers and send notification to the ones that are subscribing to the same service
-
-                        var simillarSubscribers = _register.SameServiceSubscribers();
-                        _notification.Send(simillarSubscribers);
-                    }
-                    
+                        // check for the gracetime
+                        // after time we should perhaps do one last check
+                        if (!ServiceOutage(subscriber.Service))
+                            _notification.Send(subscriber);
+                    }               
                 }
             }
-            throw new NotImplementedException();
+        }
+
+        public bool ServiceOutage(Node service)
+        {
+            if(service == null)
+                throw new ArgumentNullException("service");
+
+            var now = DateTimeOffset.UtcNow;
+
+            if ((now > service.OutageStartTime) && (now < service.OutageEndTime))
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool TestConnection(int frequency)
         {
-            if (frequency < MIN_FREQUENCY)
-            {
-                throw new ArgumentOutOfRangeException("frequency most be higher than a second");
-            }
-
             try
             {
                 if (_client != null && _client.Client != null && _client.Client.Connected)
@@ -119,6 +125,20 @@ namespace ServiceMonitor.Monitor.Services
                 return false;
             }
         }
+
+        public bool IsIPV4(string value)
+        {
+            IPAddress address;
+            if (IPAddress.TryParse(value, out address))
+            {
+                if (address.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         protected virtual void Dispose(bool disposing)
         {

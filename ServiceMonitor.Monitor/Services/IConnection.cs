@@ -7,8 +7,10 @@ namespace ServiceMonitor.Monitor.Services
 {
     public interface IConnection : IDisposable
     {
-        bool TryGetServiceStatus(Node node);
-        void TryPollServie(Subscriber caller);
+        void TryConnect(Node node);
+        void TryPollServie(Subscriber subscriber);
         bool TestConnection(int pollingFrequency); // in microsecond
+        bool IsIPV4(string value);
+        bool ServiceOutage(Node service);
     }
 }

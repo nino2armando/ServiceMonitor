@@ -28,13 +28,24 @@ namespace ServiceMonitor.Tests.Integration
             _connection = new Connection(_client, _notification, _register);
         }
 
-        [Test]
-        public void Estabilish_Returns_Correct_Response()
+        [TearDown]
+        public void TearDown()
         {
-            //EstablishListener();
-            var caller = GetCaller();
-            _connection.TryPollServie(caller);
-            
+            if (_listener != null)
+            {
+                if (_listener.Server != null)
+                {
+                    _listener.Server.Close();
+                    _listener.Stop();
+                }
+            }
+        }
+
+        [Test]
+        public void TryConnect_Estabilishes_Connection_to_the_Listener()
+        {
+            EstablishListener();
+            _connection.TryConnect(GetCaller().Service);
         }
 
 
@@ -43,11 +54,10 @@ namespace ServiceMonitor.Tests.Integration
             return new Subscriber
                 {
                     Name = "test caller",
-                    Criteria = new Node
+                    Service = new Node
                         {
                             Ip = "127.0.0.1",
-                            Port = 11111,
-                            PollingFrequency = 1
+                            Port = 11111
                         }
                 };
         }

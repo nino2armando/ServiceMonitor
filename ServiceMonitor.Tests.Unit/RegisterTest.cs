@@ -25,15 +25,27 @@ namespace ServiceMonitor.Tests.Unit
         }
 
         [Test]
+        public void Enable_allows_for_Caller_subscription()
+        {
+            var subscriber = GetTestSubscribers().First();
+
+            _register.Enable(subscriber);
+
+            _connection.AssertWasCalled(a => a.TryPollServie(subscriber));
+        }
+
+        [Test]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public void Enable_throws_exception_for_null_argument()
+        {
+            _register.Enable(null);
+        }
+
+        [Test]
         public void SameServiceSubscribers_should_extract_simillar_subscribers_from_list()
         {
-            Func<IEnumerable<Subscriber>> collection = GetTestSubscribers; 
-
-            _register.Expect(a => a.GetAllSubsribers()).IgnoreArguments().Do(collection).Repeat.Once();
-
-            
-            
-            var result = _register.SameServiceSubscribers();
+ 
+            var result = _register.SameServiceSubscribers(GetTestSubscribers());
 
             
         }
@@ -44,7 +56,8 @@ namespace ServiceMonitor.Tests.Unit
                 {
                     new Subscriber
                         {
-                            Criteria = new Node
+                            Name = "s1",
+                            Service = new Node
                                 {
                                     Ip = "127.0.0.1",
                                     Port = 11111
@@ -52,7 +65,8 @@ namespace ServiceMonitor.Tests.Unit
                         },
                     new Subscriber
                         {
-                            Criteria = new Node
+                            Name = "s2",
+                            Service = new Node
                                 {
                                     Ip = "127.0.0.1",
                                     Port = 11111
@@ -60,7 +74,8 @@ namespace ServiceMonitor.Tests.Unit
                         },
                     new Subscriber
                         {
-                            Criteria = new Node
+                            Name = "s3",
+                            Service = new Node
                                 {
                                     Ip = "127.0.0.1",
                                     Port = 11112

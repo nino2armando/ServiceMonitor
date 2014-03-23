@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using ServiceMonitor.Caller;
+using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Monitor.Services
 {
     public class Register : IRegister
     {
+        private List<Subscriber> AllSubscribers { get; set; }
         private IConnection _connection;
 
         public Register(IConnection connection)
@@ -15,33 +17,37 @@ namespace ServiceMonitor.Monitor.Services
                 throw new ArgumentNullException("connection");
 
             _connection = connection;
+            AllSubscribers = new List<Subscriber>();
         }
 
         public IEnumerable<Subscriber> GetAllSubsribers()
         {
-            // call some service to get all subscribers
-            return new List<Subscriber>();
+            return AllSubscribers;
         }
 
-        public IEnumerable<Subscriber> SameServiceSubscribers()
+        public IEnumerable<Subscriber> SameServiceSubscribers(IEnumerable<Subscriber> allRegistered)
         {
-            var allRegistered = GetAllSubsribers();
-            var sameServiceSubscribers = new List<Subscriber>();
+            var result = from x in allRegistered
+                         group x by new {x.Service.Ip, x.Service.Port}
+                         into grp
+                         select new Subscriber
+                             {
+                                 Service = new Node
+                                     {
+                                         Ip = grp.Key.Ip,
+                                         Port = grp.Key.Port
+                                     }
+                             };
 
-            foreach (var subscriber in allRegistered)
-            {
-                sameServiceSubscribers.AddRange(
-                    allRegistered.Where(
-                        sub =>
-                        subscriber.Criteria.Ip == sub.Criteria.Ip &&
-                        subscriber.Criteria.Port == sub.Criteria.Port));
-            }
-
-            return sameServiceSubscribers;
+            return result;
         }
 
         public void Enable(Subscriber caller)
         {
+            if(caller == null)
+                throw new ArgumentNullException("caller");
+
+            AllSubscribers.Add(caller);
             _connection.TryPollServie(caller);
         }
     }
