@@ -97,9 +97,7 @@ namespace ServiceMonitor.Tests.Unit
         [Test]
         public void CallSubscribedServies_sends_notification_on_Failure()
         {
-            var thisSubsriber = new List<Subscriber>()
-                {
-                    new Subscriber
+            var thisSubsriber = new Subscriber
                         {
                             PollingFrequency = 100000,
                             Service = new Node
@@ -109,47 +107,101 @@ namespace ServiceMonitor.Tests.Unit
                                     OutageStartTime = DateTime.Now,
                                     OutageEndTime = DateTime.Now.AddHours(-1)
                                 }
-                        }
+                        
                 };
-            _connection.CallSubscribedServies(thisSubsriber);
 
-            _notification.AssertWasCalled(a => a.Send(thisSubsriber.First()));
+            
+            _notification.Expect(a => a.GetSubscriptionList()).Return(GetSubscribers());
+            _connection.CallSubscriberService(thisSubsriber);
+            _notification.AssertWasCalled(
+                a =>
+                a.Send(thisSubsriber.Service.Ip, thisSubsriber.Service.Port));
         }
 
         [Test]
         public void CallSubscribedServies_should_wait_for_gracetime_before_sending_notification()
         {
-            // todo: do gractimechecks
-            _connection.CallSubscribedServies(GetSubscribers());
+            //EstablishListener();
+            _connection.CallSubscriberService(GetSubscribers().First());
 
         }
 
         [Test]
-        public void CallSubscribedServies_Does_Not_send_notification_if_ServicePollPassed_passed()
+        public void CallSubscribedServies_Does_Not_send_notification_Service_Outage_Is_Specified()
         {
-            // todo: need to stop the polling 
+            var subscriber = GetSubscribers().ToList()[1];
+
+            _connection.CallSubscriberService(subscriber);
+
+            _notification.AssertWasNotCalled(a => a.Send(subscriber.Service.Ip, subscriber.Service.Port));
         }
+
+        //[Test]
+        //public void CallSubscribedServies_Calls_ServicePollPassed_if_serviceOutage_is_specified()
+        //{
+        //    var thisSubsriber = new Subscriber
+        //    {
+        //        PollingFrequency = 100000,
+        //        Service = new Node
+        //        {
+        //            Ip = "127.0.0.1",
+        //            Port = 11111,
+        //            OutageStartTime = DateTime.Now.AddHours(-1),
+        //            OutageEndTime = DateTime.Now.AddHours(1)
+        //        }
+
+        //    };
+
+        //    var connection = MockRepository.GenerateMock<IConnection>();
+
+        //    connection.Expect(a => a.ServicePollPassed(thisSubsriber)).IgnoreArguments().Return(false);
+        //    connection.CallSubscriberService(thisSubsriber);
+        //    connection.AssertWasCalled(a => a.ServicePollPassed(thisSubsriber), o => o.Repeat.Once());
+        //    connection.VerifyAllExpectations();
+        //}
+
+        //[Test]
+        //public void CallSubscribedServies_Calls_ServicePollPassed_twice_if_graceTime_specified()
+        //{
+        //    var thisSubsriber = new Subscriber
+        //    {
+        //        GraceTime = 1000000,
+        //        PollingFrequency = 100000,
+        //        Service = new Node
+        //        {
+        //            Ip = "127.0.0.1",
+        //            Port = 11111,
+        //            OutageStartTime = DateTime.Now.AddHours(-1),
+        //            OutageEndTime = DateTime.Now.AddHours(1)
+        //        }
+
+        //    };
+
+        //    var connection = MockRepository.GenerateMock<IConnection>();
+
+        //    connection.Expect(a => a.ServiceOutage(thisSubsriber.Service)).IgnoreArguments().Return(false);
+        //    connection.CallSubscriberService(thisSubsriber);
+        //    connection.AssertWasCalled(a => a.ServicePollPassed(thisSubsriber), options => options.Repeat.Times(1));
+        //}
 
         //[Test]
         //public void CallSubscribedServies_makes_a_call_to_ServicePollPassed()
         //{
-        //    var thisSubsriber = new List<Subscriber>()
+        //    var thisSubsriber = new Subscriber
+        //    {
+        //        PollingFrequency = 100000,
+        //        Service = new Node
         //        {
-        //            new Subscriber
-        //                {
-        //                    PollingFrequency = 100000,
-        //                    Service = new Node
-        //                        {
-        //                            Ip = "127.0.0.1",
-        //                            Port = 11111,
-        //                            OutageStartTime = DateTime.Now,
-        //                            OutageEndTime = DateTime.Now.AddHours(-1)
-        //                        }
-        //                }
-        //        };
+        //            Ip = "127.0.0.1",
+        //            Port = 11111,
+        //            OutageStartTime = DateTime.Now,
+        //            OutageEndTime = DateTime.Now.AddHours(-1)
+        //        }
+
+        //    };
         //    var connection = MockRepository.GenerateMock<IConnection>();
-        //    connection.Expect(a => a.CallSubscribedServies(thisSubsriber));
-        //    connection.AssertWasCalled(a => a.ServicePollPassed(thisSubsriber.First()));
+        //    connection.Expect(a => a.CallSubscriberService(thisSubsriber));
+        //    connection.AssertWasCalled(a => a.ServicePollPassed(thisSubsriber));
         //}
 
         [Test]

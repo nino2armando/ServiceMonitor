@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using ServiceMonitor.Caller;
 using ServiceMonitor.Monitor.Services;
+using ServiceMonitor.Notification.Services;
 using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Tests.Unit
@@ -16,23 +15,34 @@ namespace ServiceMonitor.Tests.Unit
     {
         private IConnection _connection;
         private IRegister _register;
+        private INodeProvider _nodeProvider;
+        private INotification _notification;
 
         [SetUp]
         public void Setup()
         {
             _connection = MockRepository.GenerateStub<IConnection>();
-            _register = new Register(_connection);
+            _nodeProvider = MockRepository.GenerateMock<INodeProvider>();
+            _notification = MockRepository.GenerateMock<INotification>();
+            _register = new Register(_connection, _nodeProvider, _notification);
         }
 
         [Test]
-        public void Enable_allows_for_Caller_subscription()
+        public void Enable_requests_all_servcies_from_NodeProvider()
         {
+            _nodeProvider.Expect(a => a.GetAllAvailableServices()).Return(new List<Node>
+                {
+                    new Node
+                        {
+                            Ip = "127.0.0.1",
+                            Port = 11111,
+                        }
+                });
             var subscriber = GetTestSubscribers().First();
 
             _register.Enable(subscriber);
-            var allsubs = _register.GetAllSubsribers();
 
-            _connection.AssertWasCalled(a => a.CallSubscribedServies(allsubs));
+            _nodeProvider.AssertWasCalled(a => a.GetAllAvailableServices());
         }
 
         [Test]
@@ -43,12 +53,69 @@ namespace ServiceMonitor.Tests.Unit
         }
 
         [Test]
-        public void SameServiceSubscribers_should_extract_simillar_subscribers_from_list()
+        public void Enable_only_calls_CallSubscriberService_for_newServices()
         {
- 
-            var result = _register.SameServiceSubscribers(GetTestSubscribers());
+            var nodeList = new List<Node>
+                {
+                    new Node
+                        {
+                            Ip = "127.0.0.1",
+                            Port = 11112,
+                        }
+                };
 
-            
+            var sub = new Subscriber
+                {
+                    Service = nodeList.First()
+                };
+
+            _nodeProvider.Expect(a => a.GetAllAvailableServices()).Return(nodeList);
+            _register.Enable(sub);
+
+            // passing same service
+            _connection.AssertWasNotCalled(a => a.CallSubscriberService(sub));
+        }
+
+        [Test]
+        public void Enable_Register_caller_for_notifications_for_new_and_old_notifications()
+        {
+            var nodeList = new List<Node>
+                {
+                    new Node
+                        {
+                            Ip = "127.0.0.1",
+                            Port = 11112,
+                        }
+                };
+            var sub = GetTestSubscribers().First();
+            _nodeProvider.Expect(a => a.GetAllAvailableServices()).Return(nodeList);
+            _register.Enable(sub);
+            _notification.AssertWasCalled(a => a.AddToSubscriptionList(sub));
+        }
+
+        [Test]
+        public void Enable_Will_calls_all_expected_services_for_newServices()
+        {
+            var nodeList = new List<Node>
+                {
+                    new Node
+                        {
+                            Ip = "192.168.0.1",
+                            Port = 11112,
+                        }
+                };
+
+            var sub = new Subscriber
+            {
+                Service = GetTestSubscribers().First().Service
+            };
+
+            _nodeProvider.Expect(a => a.GetAllAvailableServices()).Return(nodeList);
+            _register.Enable(sub);
+
+            // passing same service
+            _connection.AssertWasCalled(a => a.CallSubscriberService(sub));
+            _nodeProvider.AssertWasCalled(a => a.AddService(sub.Service));
         }
 
         public List<Subscriber> GetTestSubscribers()
@@ -61,7 +128,7 @@ namespace ServiceMonitor.Tests.Unit
                             Service = new Node
                                 {
                                     Ip = "127.0.0.1",
-                                    Port = 11111
+                                    Port = 11112
                                 }
                         },
                     new Subscriber

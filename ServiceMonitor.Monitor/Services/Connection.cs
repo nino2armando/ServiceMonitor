@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -69,12 +68,14 @@ namespace ServiceMonitor.Monitor.Services
                 }
 
                 var reader = new StreamReader(_client.GetStream());
+                string line = string.Empty;
 
                 while (TestConnection(subscriber.PollingFrequency))
                 {
                     try
                     {
-                        var timer = new Timer(o => reader.ReadLine() , null, 0, subscriber.PollingFrequency);
+                        // this is how we check to see if conection is still online
+                        line = reader.ReadLine();
                     }
                     catch
                     {                    
@@ -84,40 +85,37 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
-        public void CallSubscribedServies(IEnumerable<Subscriber> subscribers)
+        public void CallSubscriberService(Subscriber subscriber)
         {
-            bool passed;
-            foreach (var subscriber in subscribers)
+            bool passed;   
+    
+            passed = ServicePollPassed(subscriber);
+            if (!passed)
             {
-                passed = ServicePollPassed(subscriber);
-                if (!passed)
+                if (!ServiceOutage(subscriber.Service))
                 {
-                    if (!ServiceOutage(subscriber.Service))
-                    {
-                        // check for the  grace time ??
-                        // if exist wait before notification send
-                        // check to see if service online before end of gracetime
-                        // if grace time < polling frequency    extracheck is required
+                    // check for the  grace time ??
+                    // if exist wait before notification send
+                    // check to see if service online before end of gracetime
+                    // if grace time < polling frequency extra check is required
 
-                        if (subscriber.GraceTime > 0)
+                    if (subscriber.GraceTime > 0)
+                    {
+                        Thread.Sleep(subscriber.GraceTime);
+                        passed = ServicePollPassed(subscriber);
+                        if (subscriber.GraceTime < subscriber.PollingFrequency)
                         {
-                            Thread.Sleep(subscriber.GraceTime);
                             passed = ServicePollPassed(subscriber);
-                            if (subscriber.GraceTime < subscriber.PollingFrequency)
-                            {
-                                passed = ServicePollPassed(subscriber);
-                            }
-                            if (!passed)
-                            {
-                                _notification.Send(subscriber);
-                            }
                         }
-                        else
+                        if (!passed)
                         {
-                            _notification.Send(subscriber);
+                            _notification.Send(subscriber.Service.Ip, subscriber.Service.Port);
                         }
                     }
-
+                    else
+                    {
+                        _notification.Send(subscriber.Service.Ip, subscriber.Service.Port);
+                    }
                 }
             }
         }

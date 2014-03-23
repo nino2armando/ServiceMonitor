@@ -1,45 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ServiceMonitor.Caller;
+using ServiceMonitor.Notification.Services;
 using ServiceMonitor.Service;
 
 namespace ServiceMonitor.Monitor.Services
 {
     public class Register : IRegister
     {
-        private List<Subscriber> AllSubscribers { get; set; }
         private IConnection _connection;
+        private INodeProvider _nodeProvider;
+        private INotification _notification;
 
-        public Register(IConnection connection)
+        public Register(IConnection connection, INodeProvider nodeProvider, INotification notification)
         {
             if(connection == null)
                 throw new ArgumentNullException("connection");
 
+            if (nodeProvider == null)
+                throw new ArgumentNullException("nodeProvider");
+
+            if(notification == null)
+                throw new ArgumentNullException("notification");
+
+            _nodeProvider = nodeProvider;
             _connection = connection;
-            AllSubscribers = new List<Subscriber>();
-        }
-
-        public IEnumerable<Subscriber> GetAllSubsribers()
-        {
-            return AllSubscribers;
-        }
-
-        public IEnumerable<Subscriber> SameServiceSubscribers(IEnumerable<Subscriber> allRegistered)
-        {
-            var result = from x in allRegistered
-                         group x by new {x.Service.Ip, x.Service.Port}
-                         into grp
-                         select new Subscriber
-                             {
-                                 Service = new Node
-                                     {
-                                         Ip = grp.Key.Ip,
-                                         Port = grp.Key.Port
-                                     }
-                             };
-
-            return result;
+            _notification = notification;
         }
 
         public void Enable(Subscriber caller)
@@ -47,8 +35,21 @@ namespace ServiceMonitor.Monitor.Services
             if(caller == null)
                 throw new ArgumentNullException("caller");
 
-            AllSubscribers.Add(caller);
-            _connection.CallSubscribedServies(AllSubscribers);
+            var allServices = _nodeProvider.GetAllAvailableServices();
+
+            // we should check if service is not already available
+            // otherwize just add the caller to notification list
+            var serviceExist = allServices.Any(a => a.Ip == caller.Service.Ip && a.Port == caller.Service.Port);
+
+            // either case the caller gets registered for notifications
+            _notification.AddToSubscriptionList(caller);
+
+            if (!serviceExist)
+            {
+                // if service does not exist, add to the service list
+                _nodeProvider.AddService(caller.Service);
+                var timer = new Timer(o => _connection.CallSubscriberService(caller), null, 0, caller.PollingFrequency);
+            }
         }
     }
 }
