@@ -39,8 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Response.cs" />
-    <Compile Include="Model\Status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\INotification.cs" />
     <Compile Include="Services\Notification.cs" />
@@ -49,6 +47,10 @@
     <ProjectReference Include="..\ServiceMonitor.Caller\ServiceMonitor.Caller.csproj">
       <Project>{2FB82A58-2A39-402A-96C1-824D03BF0AAF}</Project>
       <Name>ServiceMonitor.Caller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceMonitor.Service\ServiceMonitor.Service.csproj">
+      <Project>{9279EA2E-A38A-447B-9C48-A737FC3FAB1B}</Project>
+      <Name>ServiceMonitor.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

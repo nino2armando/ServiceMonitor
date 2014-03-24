@@ -28,7 +28,8 @@ namespace ServiceMonitor.Notification.Services
         public void Send(string ip, int port)
         {
             // all these subscribers would get notified
-            var allsubs = SubscriptionList.Where(a => a.Service.Ip == ip && a.Service.Port == port );
+
+            var allsubs = SubscriptionList.Where(a => a.Service.Ip == ip && a.Service.Port == port);
 
             // now send notification to these subscribers
             

@@ -1,5 +1,0 @@
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.SharedContract\bin\Debug\ServiceMonitor.SharedContract.dll
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.SharedContract\bin\Debug\ServiceMonitor.SharedContract.pdb
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.SharedContract\obj\Debug\ServiceMonitor.SharedContract.csprojResolveAssemblyReference.cache
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.SharedContract\obj\Debug\ServiceMonitor.SharedContract.dll
-c:\users\nino\documents\visual studio 2012\Projects\ServiceMonitor\ServiceMonitor.SharedContract\obj\Debug\ServiceMonitor.SharedContract.pdb
