@@ -32,6 +32,12 @@ namespace ServiceMonitor.Monitor.Services
             _register = register;
         }
 
+        /// <summary>
+        /// Tries the connect.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <exception cref="System.ArgumentNullException">node</exception>
+        /// <exception cref="System.IO.InvalidDataException">Ip</exception>
         public void TryConnect(Node node)
         {
             if (node == null)
@@ -45,6 +51,14 @@ namespace ServiceMonitor.Monitor.Services
              _client.Connect(address, node.Port);
         }
 
+        /// <summary>
+        /// Services the poll passed.
+        /// </summary>
+        /// <param name="subscriber">The subscriber.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">criteria</exception>
+        /// <exception cref="System.IO.InvalidDataException">Ip</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">frequency most be higher than a second</exception>
         public bool ServicePollPassed(Subscriber subscriber)
         {
             if (subscriber.Service == null)
@@ -85,6 +99,10 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
+        /// <summary>
+        /// Calls the subscriber service.
+        /// </summary>
+        /// <param name="subscriber">The subscriber.</param>
         public void CallSubscriberService(Subscriber subscriber)
         {
             bool passed;   
@@ -120,6 +138,12 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
+        /// <summary>
+        /// Services the outage.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">service</exception>
         public bool ServiceOutage(Node service)
         {
             if(service == null)
@@ -134,6 +158,11 @@ namespace ServiceMonitor.Monitor.Services
             return false;
         }
 
+        /// <summary>
+        /// Tests the connection.
+        /// </summary>
+        /// <param name="frequency">The frequency.</param>
+        /// <returns></returns>
         public bool TestConnection(int frequency)
         {
             try
@@ -161,6 +190,11 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
+        /// <summary>
+        /// Determines whether [is ip v4] [the specified value].
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public bool IsIPV4(string value)
         {
             IPAddress address;

@@ -30,6 +30,11 @@ namespace ServiceMonitor.Monitor.Services
             _notification = notification;
         }
 
+        /// <summary>
+        /// Enables the specified caller.
+        /// </summary>
+        /// <param name="caller">The caller.</param>
+        /// <exception cref="System.ArgumentNullException">caller</exception>
         public void Enable(Subscriber caller)
         {
             if(caller == null)

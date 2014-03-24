@@ -11,16 +11,28 @@ namespace ServiceMonitor.Service
         {
             AllServices = new List<Node>();
         }
+        /// <summary>
+        /// Gets all available services.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Node> GetAllAvailableServices()
         {
             return AllServices;
         }
 
+        /// <summary>
+        /// Adds the service.
+        /// </summary>
+        /// <param name="service">The service.</param>
         public void AddService(Node service)
         {
             AllServices.Add(service);
         }
 
+        /// <summary>
+        /// Tests the vector.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Node> TestVector()
         {
             return new List<Node>()

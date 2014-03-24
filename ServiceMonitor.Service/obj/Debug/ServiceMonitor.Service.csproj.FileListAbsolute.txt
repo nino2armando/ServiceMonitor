@@ -1,4 +1,0 @@
-C:\Users\Nino\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\bin\Debug\ServiceMonitor.Service.dll
-C:\Users\Nino\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\bin\Debug\ServiceMonitor.Service.pdb
-C:\Users\Nino\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.dll
-C:\Users\Nino\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.pdb

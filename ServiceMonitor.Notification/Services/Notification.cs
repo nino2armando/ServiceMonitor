@@ -14,17 +14,31 @@ namespace ServiceMonitor.Notification.Services
             SubscriptionList = new List<Subscriber>();
         }
 
+        /// <summary>
+        /// Adds to subscription list.
+        /// </summary>
+        /// <param name="caller">The caller.</param>
         public void AddToSubscriptionList(Subscriber caller)
         {
             SubscriptionList.Add(caller);
         }
 
 
+        /// <summary>
+        /// Gets the subscription list.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Subscriber> GetSubscriptionList()
         {
             return SubscriptionList;
         }
 
+        /// <summary>
+        /// Sends the specified ip.
+        /// </summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
         public void Send(string ip, int port)
         {
             // all these subscribers would get notified
