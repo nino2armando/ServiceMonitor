@@ -24,11 +24,11 @@ namespace ServiceMonitor
                     GraceTime = 1000,
                     Id = 11,
                     Name = "Console.Call",
-                    PollingFrequency = 1000,
+                    PollingFrequency = 60000,
                     Service = new Node()
                         {
                             Ip = "127.0.0.1",
-                            Port = 1111
+                            Port = 13000
                         }
                 };
             

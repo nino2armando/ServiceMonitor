@@ -26,18 +26,18 @@ namespace ServiceMonitor.Tests.Integration
             _connection = new Connection(_client, _notification);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            if (_listener != null)
-            {
-                if (_listener.Server != null)
-                {
-                    _listener.Server.Close();
-                    _listener.Stop();
-                }
-            }
-        }
+        //[TearDown]
+        //public void TearDown()
+        //{
+        //    if (_listener != null)
+        //    {
+        //        if (_listener.Server != null)
+        //        {
+        //            _listener.Server.Close();
+        //            _listener.Stop();
+        //        }
+        //    }
+        //}
 
         [Test]
         public void TryConnect_Estabilishes_Connection_to_the_Listener()

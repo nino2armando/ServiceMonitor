@@ -1,5 +1,4 @@
 C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\bin\Debug\ServiceMonitor.Service.dll
 C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\bin\Debug\ServiceMonitor.Service.pdb
-C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.csprojResolveAssemblyReference.cache
 C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.dll
 C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Service\obj\Debug\ServiceMonitor.Service.pdb

@@ -68,33 +68,18 @@ namespace ServiceMonitor.Monitor.Services
             if (subscriber.PollingFrequency < MIN_FREQUENCY)    
                 throw new ArgumentOutOfRangeException("frequency most be higher than a second");
 
-            while (true)
-            {
+            bool poll = true;
                 try
                 {
-                    TryConnect(subscriber.Service);
+                    if(!_client.Client.Connected)
+                        TryConnect(subscriber.Service);
                 }
                 catch (Exception)
                 {
-                    return false;
+                    poll = false;
                 }
 
-                var reader = new StreamReader(_client.GetStream());
-                string line = string.Empty;
-
-                while (TestConnection(subscriber.PollingFrequency))
-                {
-                    try
-                    {
-                        // this is how we check to see if conection is still online
-                        line = reader.ReadLine();
-                    }
-                    catch
-                    {                    
-                        return false;
-                    }               
-                }
-            }
+            return poll;
         }
 
         /// <summary>

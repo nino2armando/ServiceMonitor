@@ -61,7 +61,7 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
-        public void CallBack(IAsyncResult asyncResult)
+        private void CallBack(IAsyncResult asyncResult)
         {
             var target = (Func<Subscriber, bool>) asyncResult.AsyncState;
             bool result = target.EndInvoke(asyncResult);
@@ -71,7 +71,7 @@ namespace ServiceMonitor.Monitor.Services
             }
         }
 
-        public void Stop()
+        private void Stop()
         {
             _timer.Dispose();
         }
