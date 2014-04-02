@@ -49,7 +49,7 @@ namespace ServiceMonitor.Notification.Services
             
             // todo: not too sure how the messaging is going to look like
 
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
     }
 }

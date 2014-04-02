@@ -18,16 +18,14 @@ namespace ServiceMonitor.Tests.Unit
         private IConnection _connection;
         private TcpListener _listener;
         private TcpClient _client;
-        private IRegister _register;
         private INotification _notification;
 
         [SetUp]
         public void SetUp()
         {
             _notification = MockRepository.GenerateMock<INotification>();
-            _register = MockRepository.GenerateMock<IRegister>();
             _client = new TcpClient();
-            _connection = new Connection(_client, _notification, _register);
+            _connection = new Connection(_client, _notification);
         }
 
         [TearDown]

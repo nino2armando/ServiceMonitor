@@ -16,16 +16,14 @@ namespace ServiceMonitor.Tests.Integration
         private TcpListener _listener;
         private TcpClient _client;
         private INotification _notification;
-        private IRegister _register;
 
         [SetUp]
         public void SetUp()
         {
             _notification = MockRepository.GenerateMock<INotification>();
-            _register = MockRepository.GenerateMock<IRegister>();
             _listener = new TcpListener(IPAddress.Loopback, 11111);
             _client = new TcpClient();
-            _connection = new Connection(_client, _notification, _register);
+            _connection = new Connection(_client, _notification);
         }
 
         [TearDown]

@@ -1,0 +1,7 @@
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.Caller.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.Caller.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.Service.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\bin\Debug\ServiceMonitor.Service.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.csprojResolveAssemblyReference.cache
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Caller\obj\Debug\ServiceMonitor.Caller.pdb

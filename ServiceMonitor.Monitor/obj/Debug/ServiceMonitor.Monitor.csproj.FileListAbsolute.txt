@@ -1,0 +1,11 @@
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Monitor.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Monitor.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Caller.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Notification.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Service.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Caller.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Notification.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\bin\Debug\ServiceMonitor.Service.pdb
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\obj\Debug\ServiceMonitor.Monitor.csprojResolveAssemblyReference.cache
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\obj\Debug\ServiceMonitor.Monitor.dll
+C:\Users\nkhodabandeh\Documents\Visual Studio 2012\Projects\ServiceMonitor\ServiceMonitor.Monitor\obj\Debug\ServiceMonitor.Monitor.pdb

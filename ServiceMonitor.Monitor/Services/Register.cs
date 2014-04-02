@@ -13,6 +13,8 @@ namespace ServiceMonitor.Monitor.Services
         private IConnection _connection;
         private INodeProvider _nodeProvider;
         private INotification _notification;
+        private Func<Subscriber, bool> method;
+        private Timer _timer;
 
         public Register(IConnection connection, INodeProvider nodeProvider, INotification notification)
         {
@@ -42,6 +44,8 @@ namespace ServiceMonitor.Monitor.Services
 
             var allServices = _nodeProvider.GetAllAvailableServices();
 
+            method = _connection.CallSubscriberService;
+
             // we should check if service is not already available
             // otherwize just add the caller to notification list
             var serviceExist = allServices.Any(a => a.Ip == caller.Service.Ip && a.Port == caller.Service.Port);
@@ -53,8 +57,23 @@ namespace ServiceMonitor.Monitor.Services
             {
                 // if service does not exist, add to the service list
                 _nodeProvider.AddService(caller.Service);
-                var timer = new Timer(o => _connection.CallSubscriberService(caller), null, 0, caller.PollingFrequency);
+                _timer = new Timer(o => method.BeginInvoke(caller, CallBack, method), null, 0, caller.PollingFrequency);
             }
+        }
+
+        public void CallBack(IAsyncResult asyncResult)
+        {
+            var target = (Func<Subscriber, bool>) asyncResult.AsyncState;
+            bool result = target.EndInvoke(asyncResult);
+            if (result == false)
+            {
+                Stop();
+            }
+        }
+
+        public void Stop()
+        {
+            _timer.Dispose();
         }
     }
 }

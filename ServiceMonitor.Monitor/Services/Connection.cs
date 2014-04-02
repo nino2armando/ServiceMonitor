@@ -13,23 +13,21 @@ namespace ServiceMonitor.Monitor.Services
     {
         private TcpClient _client { get; set; }
         private readonly INotification _notification;
-        private readonly IRegister _register;
 
         private bool _disposed;
         private const int MIN_FREQUENCY = 1000;
 
-        public Connection(TcpClient client, INotification notification, IRegister register)
+        public Connection(TcpClient client, INotification notification)
         {
             if (notification == null)
                 throw new ArgumentNullException("notification");
 
-            if(register == null)
-                throw new ArgumentNullException("register");
+            if(notification == null)
+                throw new ArgumentNullException("notification");
 
             _disposed = false;
             _client = client ?? new TcpClient();
             _notification = notification;
-            _register = register;
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace ServiceMonitor.Monitor.Services
         /// Calls the subscriber service.
         /// </summary>
         /// <param name="subscriber">The subscriber.</param>
-        public void CallSubscriberService(Subscriber subscriber)
+        public bool CallSubscriberService(Subscriber subscriber)
         {
             bool passed;   
     
@@ -136,6 +134,7 @@ namespace ServiceMonitor.Monitor.Services
                     }
                 }
             }
+            return passed;
         }
 
         /// <summary>
